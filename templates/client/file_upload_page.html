@@ -39,7 +39,7 @@
         font-size: 20px;
         padding-top: 50px;
         padding-left: 50px;
-        background-color: rgb(160, 248, 248)
+        background-color: rgba(205, 216, 216, 0.924)
       }
     </style>
   </head>
@@ -50,7 +50,7 @@
         <h2>
           Welcome! <br>
           You have reached
-          <a style="color: rgb(255, 0, 0)">DeepOVel - Deep Object Velocity in Video<br></a>
+          <a style="color: rgb(175, 75, 75)">DeepOVel - Deep Object Velocity in Video<br></a>
         </h2>
         <p> This tool leverages implementations of YOLOv4 & DeepSORT to perform object detection and tracking. <br>
           It then tries to estimate the velocity of moving objects in the video.<br><br>
@@ -63,7 +63,7 @@
           <dl>
             To run the tool, please fill the follow parameters pertaining to the video capture and upload your video.<br><br>
             Once the video is done being processed, a .zip file will be provided containing: <br>
-            1. A copy of the origin uploaded video<br>
+            1. A copy of the original uploaded video<br>
             2. A video with bounding boxes as an output from the Yolo & DeepSort algorithms<br>
             3. A video with the estimated velocities of the detected objects<br>
             4. A .csv file containing all of the outputs of the tool<br>
@@ -89,10 +89,8 @@
             </div>
             <br>
             <div class="text">
-              <dt> <label for="VelScale">Desired speed unit conversion factor allowing to convert from m/sec (e.g. 2.23694 will convert to mph, 1 will
-                  keep
-                  it
-                  in m/sec) </label></dt>
+              <dt> <label for="VelScale">Desired speed unit conversion factor allowing to convert from m/sec 
+                (e.g. 2.23694 will convert to mph, 1 (one) will keep it in m/sec) </label></dt>
               <dt> <input name="VelScale" type="number" value="2.23694"> </dt>
               <br>
             </div>
@@ -110,7 +108,7 @@
             </div>
           </dl>
 
-          <h4 style="color: rgb(255, 0, 0)">
+          <h4 style="color: rgb(175, 75, 75)">
             Please upload an .mp4 video file for processing:
           </h4>
           <div class="text">

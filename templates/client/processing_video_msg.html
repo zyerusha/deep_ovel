@@ -38,7 +38,7 @@
                 font-size: 20px;
                 padding-top: 50px;
                 padding-left: 50px;
-                background-color: rgb(160, 248, 248)
+                background-color: rgba(205, 216, 216, 0.924)
             }
         </style>
     </head>
@@ -47,8 +47,9 @@
 
         <body onload="start_processing()" onload="check_progress()">
             <div class="text">
-
-                Processing of the video has begun.<br><br>
+                <h3 style="color: rgb(175, 75, 75)">
+                    Processing of the video has begun.<br><br>
+                </h3>
                 This can take several minutes and your patience is appreciated.<br><br>
                 Please do NOT refresh the screen. <br><br>
                 This screen will change, letting you know once it's done.<br><br>
@@ -61,11 +62,13 @@
                 </h1>
             </div>
             <dl>
-                <dt> <label for="progress_bar1">Running YOLO & DeepSORT on {{filename}}:</label> </dt>
-                <dt> <progress id="progress_bar1" value="0" max="100" position:absolute>0% </progress></dt>
-                <dt><br></dt>
-                <dt> <label for="progress_bar2">Creating velocity video:</label></dt>
-                <dt> <progress id="progress_bar2" value="0" max="100" position:absolute> 0% </progress> </dt>
+                <h5 style="color: rgb(175, 75, 75)">
+                    <dt> <label for="progress_bar1">Running YOLO & DeepSORT on {{filename}}:</label> </dt>
+                    <dt> <progress id="progress_bar1" value="0" max="100" position:absolute>0% </progress></dt>
+                    <dt><br></dt>
+                    <dt> <label for="progress_bar2">Creating velocity video:</label></dt>
+                    <dt> <progress id="progress_bar2" value="0" max="100" position:absolute> 0% </progress> </dt>
+                </h5>
                 <dt>
                     <div class="container">
                         <video width="640" height="480" autoplay muted loop>
