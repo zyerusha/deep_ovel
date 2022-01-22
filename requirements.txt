@@ -26,3 +26,4 @@ pyyaml
 apscheduler
 MarkupSafe
 Flask
+waitress

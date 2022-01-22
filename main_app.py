@@ -13,6 +13,7 @@ import werkzeug
 # from werkzeug.utils import secure_filename
 from deep_ovel import DeepOVel
 import threading
+from waitress import serve
 
 app = Flask(__name__)
 app.uploadVideoName = ""
@@ -80,7 +81,7 @@ def download(filename):
     try:
         folder = app.config["DOWNLOAD_FOLDER"]
         print(f"Download folder: {folder}")
-        return send_from_directory(folder, filename=filename, as_attachment=True)
+        return send_from_directory(folder, filename, as_attachment=True)
     except FileNotFoundError:
         abort(404)
 
@@ -164,4 +165,4 @@ def upload_file():
 
 if __name__ == "__main__":
     print(f'ENV is set to: {app.config["ENV"]}')
-    app.run(host='0.0.0.0')
+    serve(app, host=app.config["HOST_IP"], port=app.config["PORT"])
