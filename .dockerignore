@@ -18,3 +18,7 @@ devops
 # To prevent storing dev/temporary container data
 *.csv
 tmp
+Docs
+templates/examples
+static/uploads
+static/downloads
