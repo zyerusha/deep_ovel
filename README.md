@@ -1,18 +1,31 @@
 ## <span style="color: rgb(175, 75, 75)">*!!! Welcome to DeepOVel - Deep Object Velocity in Video !!!*</span>
 
 This tool was developed as part of my capstone project for the UC San Diego Extension Machine Learning Engineering Bootcamp.
-The tool aims to find the velocity of objects within a video using Deep Learning algorithms.
-The output of this code produces a Flask web server that enables a user to upload a video via the web browser, the video is processed and the output returned is a .zip file containg: 
-1. A copy of the original uploaded video 
-2. A video with bounding boxes as an output from the Yolo & DeepSort algorithms
-3. A video with the estimated velocities of the detected objects
-4. A .csv file containing all of the outputs of the tool
+My  objective in this project was to be able to estimate the velocity of moving objects within a video using Deep Learning algorithms.  
+</br>
+The output of this code produces a Flask web server that enables a user to upload a video via the web browser.  The video is processed and returned in the form of a .zip file containing: 
+- [x] A copy of the original uploaded video 
+- [x] A video with bounding boxes as an output from the Yolo & DeepSort algorithms
+- [x] A video with the estimated velocities of the detected objects
+- [x] A .csv file containing all of the outputs of the tool
 
-The main server page will look something like this:  
+
+![image](https://user-images.githubusercontent.com/11064132/150652498-d252d0bf-fc43-404e-99c3-e2c97b2b347a.png)
+
+
+</br>
+<img src="https://user-images.githubusercontent.com/11064132/150653665-94e447be-5d24-429f-b9df-888453adc920.png" alt="drawing" width="700"/>
+<img src="https://user-images.githubusercontent.com/11064132/150653860-2ec97e7d-b016-4669-a368-194113090ed6.png" alt="drawing" width="700"/>
+
+___
+
+
+### The main server page will look something like this:  
 ![image](https://user-images.githubusercontent.com/11064132/150650186-d12c9a9c-12ff-41b5-a4f3-efe21bac5887.png)
 
-To use this properly, the user should enter the correct camera/video parameters that are used for the velocity calculations. 
-![image](https://user-images.githubusercontent.com/11064132/150624693-580ee295-5bc6-483c-acdd-703d429b6030.png)
+
+To properly use this tool, the user should enter the correct camera/video parameters that are used for the velocity calculations. 
+
 
 The project is hosted on dockerhub and can be run with a docker call:
 ```
@@ -22,6 +35,31 @@ or
 ```
 docker run -dp <selected_port>:8080 --name <container_name> deep_ovel
 ```
+___
+
+
+## High Level overview of source files
+| Code | Description |
+| :----- | :----- |
+|./main_app.py | Is the main entry point. Starts the Flask server |
+|./app_config.py | Configures the Flask server|
+|./deep_ovel.py | The DeepOVel class manages the application and the "glue" between the Yolo-DeepSORT bounding boxes calculations and the velocity calculation. It is the main interaction with Flask server via the Run() method |
+|./deepsort_yolo.py | DeepsortYolo class manages the processing of the video, initializes and runs Yolo and DeepSORT.  The output is a processed video and dataframe with the calculations |
+|./templates/client/ | Contains HTMLs for the website used by Flask |
+|./static/media/  | Contains media used by the server |
+|./tf_yolov4/   | Main engine that runs the YOLO algorithm using tensorflow. Converts YOLOv4 to .pb, .tflite and trt format for tensorflow (https://github.com/hunglc007/tensorflow-yolov4-tflite). Minor modifications were made |
+|./app_utils/  | Contains utilities to perform different operations |
+|./deepsort/  |  Main engine that runs the DeepSORT algorithm (https://github.com/nwojke/deep_sort) with minor modifications. |
+
+
+## Further work:
+- [ ] Train the YOLO weights and optimize on better identifying vehicles and people from top view. One major flaw with the current image detection and tracking is that identification of objects (cars and humans) is not very successful from above with the current weights used.
+- [ ] Improve and optimize training of the YOLO detection and classification to more relevant objects (e.g. vehicles, humans, watercraft, aircraft).
+- [ ] The velocity calculations are very susceptible to jitter in the image tracking. There have been efforts to filter this but there is room for improvement.
+- [ ] With the current implementation, to get decent velocity estimations, the camera parameters must be inputted. Ideally, the velocity would be calculated using the size of the object that was identified based on the classification produced by YOLO. 
+ 
+ 
+ ___
 
 
 ## References
@@ -49,7 +87,7 @@ Joseph Redmon and Ali Farhadi; 2018 </br>
 [5] YOLOv4: Optimal Speed and Accuracy of Object Detection </br>
 Alexey Bochkovskiy, Chien-Yao Wang, Hong-Yuan Mark Liao; 2020 </br>
  </br>
-[6] Simple Online and Realtime Tracking with as Deep Assciation Metric </br>
+[6] Simple Online and Realtime Tracking with as Deep Association Metric </br>
 Nicolai Wojke, Alex Bewley, Dietrich Paulus; 2017 </br>
 ```
 @inproceedings{Wojke2017simple,
@@ -91,6 +129,8 @@ https://bozcani.github.io/auairdataset  </br>
 AU-AIR : Multi-modal UAV Dataset for Low Altitude Traffic Surveillance (bozcani.github.io) </br>
 Bozcan, Ilker, and Erdal Kayaan. "AU-AIR: A Multi-modal Unmanned Aerial Vehicle Dataset for Low Altitude Traffic Surveillance." </br>
 IEEE International Conference on Robotics and Automation (ICRA), 2020, to appear.
+
+
 
 
 
