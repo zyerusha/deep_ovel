@@ -1,66 +1,146 @@
 <!doctype html>
-<html lang="en">
+<html>
+
   <title>DeepOVel: Welcome</title>
 
+  <head>
+    <style>
+      .container {
+        display: flex;
+        align-items: left;
+        justify-content: left
+      }
+
+      img {
+        max-width: 100%
+      }
+
+      .image {
+        padding-left: 40px;
+      }
+
+      .text {
+        font-size: 20px;
+        padding-left: 20px;
+      }
+
+      .heading {
+        font-size: 20px;
+        padding-left: 20px;
+        color: #000;
+      }
+
+      .input_form {
+        font-size: 20px;
+        padding-left: 20px;
+      }
+
+      .page {
+        font-size: 20px;
+        padding-top: 50px;
+        padding-left: 50px;
+        background-color: rgb(160, 248, 248)
+      }
+    </style>
+  </head>
+
   <body>
-    <h1>
-      <p style="color: rgb(255, 0, 0)">
-        Deep Object Velocity in Video (DeepOVel)<br>
-      </p>
-    </h1>
+    <div class="page">
+      <div class="heading">
+        <h2>
+          Welcome! <br>
+          You have reached
+          <a style="color: rgb(255, 0, 0)">DeepOVel - Deep Object Velocity in Video<br></a>
+        </h2>
+        <p> This tool leverages implementations of YOLOv4 & DeepSORT to perform object detection and tracking. <br>
+          It then tries to estimate the velocity of moving objects in the video.<br><br>
+          The source code for this project is located <a href="https://github.com/zyerusha/deep_ovel">here</a>.
 
+      </div>
 
+      <form method=POST enctype=multipart/form-data>
+        <div class="input_form">
+          <dl>
+            To run the tool, please fill the follow parameters pertaining to the video capture and upload your video.<br><br>
+            Once the video is done being processed, a .zip file will be provided containing: <br>
+            1. A copy of the origin uploaded video<br>
+            2. A video with bounding boxes as an output from the Yolo & DeepSort algorithms<br>
+            3. A video with the estimated velocities of the detected objects<br>
+            4. A .csv file containing all of the outputs of the tool<br>
+            <br><br>
+            <h4>
+              Please provide the following:<br>
+            </h4>
+            <div class="container">
+              <div class="text">
+                <dt> <label for="CamTilt">Camera tilt from horizon [deg]</label> </dt>
+                <dt> <input name="CamTilt" type="number" value="30"> </dt>
+                <br>
+                <dt> <label for="CamHeight">Camera height [m]</label> </dt>
+                <dt> <input name="CamHeight" type="number" value="11"> </dt>
+                <br>
+                <dt> <label for="CamFov">Camera field of view [deg]</label></dt>
+                <dt> <input name="CamFov" type="number" value="41.1"></dt>
+                <br>
+              </div>
+              <div class="image">
+                <dt> <img src="\static\media\images\CameraSetup.jpg" height="300" /></dt>
+              </div>
+            </div>
+            <br>
+            <div class="text">
+              <dt> <label for="VelScale">Desired speed unit conversion factor allowing to convert from m/sec (e.g. 2.23694 will convert to mph, 1 will
+                  keep
+                  it
+                  in m/sec) </label></dt>
+              <dt> <input name="VelScale" type="number" value="2.23694"> </dt>
+              <br>
+            </div>
+            <h4>
+              Optional (If the following are not = -1, they will override the Camera Field of View input):
+            </h4>
+            <div class="text">
 
-    <form method=POST enctype=multipart/form-data>
-      <dl>
-        <h4 style="color: black">
-          Update video properties if needed:
-        </h4>
+              <dt> <label for="VertImageDim">Vertical dimension of 35 mm image format (can be found from camera specifications)</label></dt>
+              <dt> <input name="VertImageDim" type="number" value="-1"> </dt>
+              <br>
+              <dt> <label for="CamFocalLength">Focal length of the camera [m]</label></dt>
+              <dt> <input name="CamFocalLength" type="number" value="-1"> </dt>
+              <br>
+            </div>
+          </dl>
 
-        <dt> <label for="CamTilt">Camera tilt from horizon [deg]</label> </dt>
-        <dt> <input name="CamTilt" type="number" value="30"> </dt>
-        <br>
-        <dt> <label for="CamHeight">Camera height [m]</label> </dt>
-        <dt> <input name="CamHeight" type="number" value="11"> </dt>
-        <br>
-        <dt> <label for="CamFov">Camera field of view [deg]</label></dt>
-        <dt> <input name="CamFov" type="number" value="41.1"></dt>
-        <dt> <img src="\static\media\images\CameraSetup.jpg" height="300" /></dt>
+          <h4 style="color: rgb(255, 0, 0)">
+            Please upload an .mp4 video file for processing:
+          </h4>
+          <div class="text">
+            <dt> <label for="StartTime">Start time of video [sec] (0 = beginning of video)</label></dt>
+            <dt> <input name="StartTime" type="number" value="0"> </dt>
+            <br>
+            <dt> <label for="VideoDuration">Duration of video to process [sec] (-1 = full video length) </label></dt>
+            <dt> <input name="VideoDuration" type="number" value="-1"> </dt>
+            <br>
+          </div>
+          <input type=file name=file><br><br>
+          <input type=submit value=Upload>
 
-        <br>
-        <dt> <label for="VelScale">Desired speed unit conversion factor allowing to convert from m/sec<br> (e.g. 2.23694 will convert to mph, 1 will keep it in
-            m/sec) </label></dt>
-        <dt> <input name="VelScale" type="number" value="2.23694"> </dt>
-        <br>
-        <dt> <label for="StartTime">Start time of video [sec]<br>(0 = beginning of video)</label></dt>
-        <dt> <input name="StartTime" type="number" value="0"> </dt>
-        <br>
-        <dt> <label for="VideoDuration">Duration of video to process [sec]<br>(-1 = full video length) </label></dt>
-        <dt> <input name="VideoDuration" type="number" value="-1"> </dt>
-        <br>
-        <h4 style="color: black">
-          Optional (If the following are not = -1, they will override the Camera Field of View input):
-        </h4>
-        <dt> <label for="VertImageDim">Vertical dimension of 35 mm image format<br>(can be found from camera specifications)</label></dt>
-        <dt> <input name="VertImageDim" type="number" value="-1"> </dt>
-        <br>
-        <dt> <label for="CamFocalLength">Focal length of the camera [m]</label></dt>
-        <dt> <input name="CamFocalLength" type="number" value="-1"> </dt>
-        <br>
-      </dl>
-      <h4 style="color: black">
-        Please upload an .mp4 video file for processing:
-      </h4>
+        </div>
+      </form>
+      <video width="640" height="480" autoplay muted loop>
+        <source src="\static\media\videos\VIRAT_S_000005_vel.mp4" type="video/mp4">
+      </video>
+      <video width="320" height="240" autoplay muted loop>
+        <source src="\static\media\videos\VIRAT_S_000005.mp4" type="video/mp4">
+      </video>
 
-      <input type=file name=file><br><br>
-      <input type=submit value=Upload>
-    </form>
-    <video width="640" height="480" autoplay muted loop>
-      <source src="\static\media\videos\VIRAT_S_000005_vel.mp4" type="video/mp4">
-    </video>
-    <video width="320" height="240" autoplay muted loop>
-      <source src="\static\media\videos\VIRAT_S_000005.mp4" type="video/mp4">
-    </video>
+    </div>
   </body>
+
+
+
+
+
+
+
 
 </html>

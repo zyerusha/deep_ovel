@@ -1,30 +1,75 @@
 <!doctype html>
 <html lang="en" Content-Range: bytes 0-10000/2445339>
     <title>DeepOVel: Done</title>
+    <div class="page">
 
-    <body>
-        <h3 style="color: black">
-            <p> The processing of the video is now complete!!! <br></p>
-            <p> Your video with velocity estimations is ready for you to
+        <head>
+            <style>
+                .container {
+                    display: inline-block;
+                    align-items: left;
+                    justify-content: left
+                }
+
+                img {
+                    max-width: 100%
+                }
+
+                .image {
+                    padding-left: 40px;
+                }
+
+                .text {
+                    font-size: 20px;
+                    padding-left: 20px;
+                }
+
+                .heading {
+                    font-size: 20px;
+                    padding-left: 20px;
+                    color: #000;
+                }
+
+                .input_form {
+                    font-size: 20px;
+                    padding-left: 20px;
+                }
+
+                .page {
+                    font-size: 20px;
+                    padding-top: 50px;
+                    padding-left: 50px;
+                    background-color: rgb(160, 248, 248)
+                }
+            </style>
+        </head>
+
+        <body>
+
+            <h3 style="color: black">
+                The processing of the video is now complete!!! <br>
+                Your video with velocity estimations is ready for you to
                 <a href="{{ url_for('download', filename=filename) }}">download</a>.
-            </p>
-            <!-- <p> The processed .csv file is
-                <a href="{{ url_for('download', filename=filename_csv) }}">here</a>.<br><br>
-            </p> -->
-            <p>
-                Thank you. <br>
-                <img src="\static\media\gifs\1.gif" height="100" />
-            </p>
-        </h3>
+                Thank you. <br><br>
+                <img src="\static\media\gifs\1.gif" width="100" />
 
-        <!-- <img src="\static\media\gifs\2.gif" height="150" /> -->
-        <!-- <img src="\static\media\gifs\3.gif" height="150" /> -->
-        <!-- <img src="\static\media\gifs\4.gif" height="150" /> -->
-        <img src="\static\media\gifs\5.gif" height="150" />
-        <img src="\static\media\gifs\6.gif" height="150" />
-        <!-- <img src="\static\media\gifs\7.gif" height="150" /> -->
-        <img src="\static\media\gifs\8.gif" height="150" />
+            </h3>
+            <div class="container">
+                <div class="container">
 
-    </body>
+                    <!-- <img src="\static\media\gifs\2.gif" height="150" /> -->
+                    <!-- <img src="\static\media\gifs\3.gif" height="150" /> -->
+                    <!-- <img src="\static\media\gifs\4.gif" height="150" /> -->
+                    <img src="\static\media\gifs\5.gif" height="150" />
+                    <img src="\static\media\gifs\6.gif" height="150" />
+                    <!-- <img src="\static\media\gifs\7.gif" height="150" /> -->
+                </div>
+                <img src="\static\media\gifs\8.gif" height="150" />
+                <br><br>
+
+            </div>
+            <br><br> <br><br> <br><br> <br><br>
+        </body>
+    </div>
 
 </html>

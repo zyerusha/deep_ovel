@@ -25,6 +25,7 @@ from PIL import ImageFont
 import matplotlib.pyplot as plt
 import sys
 import traceback
+from zipfile import ZipFile
 
 
 class DeepOVel:
@@ -185,7 +186,6 @@ class DeepOVel:
                         for i in range(len(df_img)):
                             background_color = ImageUtils.ColorGenerator(i)
                             text_color = (255, 255, 255)
-                            text_color = (0, 255, 255)
                             x = int(df_img.iloc[i]["center_x"])
                             y = int(df_img.iloc[i]['center_y'])
                             category = df_img.iloc[i]['category']
@@ -198,7 +198,8 @@ class DeepOVel:
                             filt_velocity = round(df_img.iloc[i]["filt_vel"] * self.vel_unit_scale, 1)
                             vel_display_limit = 1
                             if((filt_velocity > vel_display_limit) and (velocity > vel_display_limit)):
-                                txt2 = 'Vel: ' + str(velocity) + " / " + str(filt_velocity)
+                                # txt2 = 'Vel: ' + str(velocity) + " / " + str(filt_velocity)
+                                txt2 = 'Vel: ' + str(filt_velocity)
 
                             fontFace = cv2.FONT_HERSHEY_SIMPLEX
                             fontScale = 0.5
@@ -212,7 +213,7 @@ class DeepOVel:
                             _y12 = _y11 + (size_txt1[0][1] + size_txt2[0][1]) + 15
                             _x21 = _x11
                             _y21 = _y12 - 5
-                            # cv2.rectangle(img, (_x11, _y11), (_x12, _y12), background_color, cv2.FILLED)
+                            cv2.rectangle(img, (_x11, _y11), (_x12, _y12), background_color, cv2.FILLED)
                             cv2.putText(img, txt1, (_x11, (_y11+15)), fontFace, fontScale, text_color, thickness)
                             cv2.putText(img, txt2, (_x21, _y21), fontFace, fontScale, text_color, thickness)
                             cv2.circle(img, (x, y), 4, (0, 0, 255), -1)
@@ -248,6 +249,10 @@ class DeepOVel:
         self.IsRunning = True
         time_now = time.time()
         self.myProgress = 0
+        basename = pathlib.Path(src_video).stem
+        dest_path = os.path.join(dest_path, basename)
+        os.makedirs(dest_path, exist_ok=True)
+        copy2(src_video, os.path.join(dest_path, os.path.basename(src_video)))
         print("App started")
         print(f"selected_id: {self.select_id}")
         success, fps, total_frames, frame_size = self.GetFps(src_video)
@@ -286,4 +291,22 @@ class DeepOVel:
         #     cnt += sleep_sec
 
         self.IsRunning = False
-        return video_out
+
+        zip_filename = os.path.join(pathlib.Path(dest_path).parent, basename + ".zip")
+
+        return zip_it_up(zip_filename, dest_path)
+
+
+def zip_it_up(zip_filename, top_dir):
+    # create a ZipFile object
+    with ZipFile(zip_filename, 'w') as zipObj:
+        # Iterate over all the files in directory
+        for folderName, subfolders, filenames in os.walk(top_dir):
+            for filename in filenames:
+                # create complete filepath of file in directory
+                filePath = os.path.join(folderName, filename)
+                # Add file to zip
+                zipObj.write(filePath, os.path.basename(filePath))
+                print(f"filePath: {filePath}")
+
+    return zip_filename
