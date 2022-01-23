@@ -37,6 +37,8 @@ or
 ```
 docker run -dp <selected_port>:8080 --name <container_name> deep_ovel
 ```
+Then open a web browser to: </br>
+"localhost:<selected_port>" 
 ___
 
 
