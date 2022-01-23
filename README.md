@@ -27,7 +27,9 @@ ___
 To properly use this tool, the user should enter the correct camera/video parameters that are used for the velocity calculations. 
 
 
-The project is hosted on dockerhub and can be run with a docker call:
+The project is hosted on [dockerhub](https://hub.docker.com/r/zafrir75/deep_ovel). </br>
+Pull by calling: ```docker pull zafrir75/deep_ovel``` </br>
+To run use: </br>
 ```
 docker run -dP deep_ovel
 ```
@@ -115,9 +117,9 @@ Nicolai Wojke, Alex Bewley, Dietrich Paulus; 2017 </br>
 [7] Simple Online and Realtime Tracking
 Alex Bewley , Zongyuan Ge, Lionel Ott, Fabio Ramos, Ben Upcroft; 2017 </br>
  </br>
-## Dataset used to evaluate the model:
-[1] VIRAT</br>
-https://viratdata.org/  </br>
+## Dataset used to evaluate the model:  
+
+[1] VIRAT https://viratdata.org/  </br>
 Videos: https://data.kitware.com/#collection/56f56db28d777f753209ba9f/folder/56f581ce8d777f753209ca43</br>
 Latest most up to date annotations are the DIVA Annotation. This is a public repository of the VIRAT video data annotations as annotated by the IARPA DIVA program. </br>
 Annotations can be found here: https://gitlab.kitware.com/viratdata/viratannotations
