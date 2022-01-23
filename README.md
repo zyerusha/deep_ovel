@@ -27,8 +27,8 @@ ___
 To properly use this tool, the user should enter the correct camera/video parameters that are used for the velocity calculations. 
 
 
-The project is hosted on [dockerhub](https://hub.docker.com/r/zafrir75/deep_ovel). </br>
-Pull by calling: ```docker pull zafrir75/deep_ovel``` </br>
+The project is hosted on [dockerhub](https://hub.docker.com/r/zyerusha/deep_ovel). </br>
+Pull by calling: ```docker pull zyerusha/deep_ovel``` </br>
 To run use: </br>
 ```
 docker run -dP deep_ovel
