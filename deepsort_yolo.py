@@ -1,6 +1,7 @@
 import cv2
 import numpy as np
 from time import time
+
 from app_utils.video_utils import VideoUtils
 from app_utils.image_utils import ImageUtils
 import pandas as pd
@@ -10,7 +11,6 @@ from deepsort.core import nn_matching
 from deepsort.core.detection import Detection
 from deepsort.core.tracker import Tracker
 
-# tensorflow_yolov4_tflite imports
 import tensorflow as tf
 from tensorflow.python.saved_model import tag_constants
 import tf_yolov4.core.utils as utils
@@ -33,7 +33,7 @@ class DeepsortYolo:
 
     def GetProgress(self):
         return self.myProgress
-    
+
     def SetProgress(self, progress):
         self.myProgress = progress
 
@@ -74,7 +74,7 @@ class DeepsortYolo:
 
                     bboxes, scores, names = self.DoYoloV4(frame, yolo_model, all_classes, find_classes)
                     result, df_frame_data = self.DoDeepsort(frame, bboxes, scores, names)
-                    cv2.putText(frame, "Object tracked: {}".format(len(names)), (5, 35), cv2.FONT_HERSHEY_COMPLEX_SMALL, 2, (0, 255, 0), 2)
+                    cv2.putText(frame, "Objects tracked: {}".format(len(names)), (5, 35), cv2.FONT_HERSHEY_COMPLEX_SMALL, 2, (0, 255, 0), 2)
                     df_frame_data['Frame'] = frame_count
 
                     # print(df_frame_data)
@@ -89,7 +89,7 @@ class DeepsortYolo:
                     percent_complete = ((frame_count-start_count)/(end_count-start_count))*100
 
                     if((frame_count % 25) == 0):
-                         print(f"Created frame id {frame_count}, {frame_count/fps:0.2f} sec in video; Objects Cnt: {len(names)} completed:  {percent_complete:0.1f} %")
+                        print(f"Created frame id {frame_count}, {frame_count/fps:0.2f} sec in video; Objects Cnt: {len(names)} completed:  {percent_complete:0.1f} %")
 
                     self.myProgress = percent_complete
                     if(frame_count > end_count):
@@ -202,8 +202,9 @@ class DeepsortYolo:
         self.deepsortTracker.update(detections)
 
         # update tracks
-        data = {}
-        output = pd.DataFrame([])
+        data_columns = ['bb_left', 'bb_top', 'bb_right', 'bb_bottom', 'category', 'object_id']
+        entry = {}
+        df_output = pd.DataFrame(columns=data_columns)
         for track in self.deepsortTracker.tracks:
             if not track.is_confirmed() or track.time_since_update > 1:
                 continue
@@ -213,18 +214,19 @@ class DeepsortYolo:
             # Create msg
             msg = str(class_name).upper() + "-" + str(track.track_id)
             ImageUtils.DrawBbox(frame, bbox[0], bbox[1], bbox[2], bbox[3], color, msg)
-            data['bb_left'] = int(bbox[0])
-            data['bb_top'] = int(bbox[1])
-            data['bb_right'] = int(bbox[2])
-            data['bb_bottom'] = int(bbox[3])
-            data['category'] = class_name
-            data['object_id'] = int(track.track_id)
-            output = output.append(data, ignore_index=True)
-
+            entry['bb_left'] = int(bbox[0])
+            entry['bb_top'] = int(bbox[1])
+            entry['bb_right'] = int(bbox[2])
+            entry['bb_bottom'] = int(bbox[3])
+            entry['category'] = class_name
+            entry['object_id'] = int(track.track_id)
+            df_entry = pd.DataFrame(data=entry, index=[0])
+            df_output = pd.concat([df_output, df_entry], ignore_index=True)
+            # print(item)
         result = np.asarray(frame)
 
-        # print(df_frame_data)
-        return result, output
+        # print(df_output)
+        return result, df_output
 
     def SelectObjects(self, bboxes, scores, classes, availabe_objects, class_names, allowed_classes):
         # loop through objects and use class index to get class name, allow only classes in allowed_classes list

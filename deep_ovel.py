@@ -182,6 +182,7 @@ class DeepOVel:
                         # All bounding box info for this frame
                         # Add all annotations to the frame
                         df_img = df[df['Frame'] == count]
+                        cv2.putText(img, "Objects tracked: {}".format(len(df_img)), (5, 35), cv2.FONT_HERSHEY_COMPLEX_SMALL, 2, (0, 255, 0), 2)
 
                         for i in range(len(df_img)):
                             background_color = ImageUtils.ColorGenerator(i)
@@ -194,18 +195,25 @@ class DeepOVel:
 
                             txt2 = ""
 
+                            bb_l = df_img.iloc[i]["bb_left"]
+                            bb_t = df_img.iloc[i]["bb_top"]
+                            bb_r = df_img.iloc[i]["bb_right"]
+                            bb_b = df_img.iloc[i]["bb_bottom"]
                             velocity = round(df_img.iloc[i]["adj_vel"] * self.vel_unit_scale, 1)
                             filt_velocity = round(df_img.iloc[i]["filt_vel"] * self.vel_unit_scale, 1)
                             vel_display_limit = 1
                             if((filt_velocity > vel_display_limit) and (velocity > vel_display_limit)):
-                                # txt2 = 'Vel: ' + str(velocity) + " / " + str(filt_velocity)
-                                txt2 = 'Vel: ' + str(filt_velocity)
+                                txt2 = 'Vel: ' + str(velocity) + " / " + str(filt_velocity)
+                                # txt2 = 'Vel: ' + str(filt_velocity)
 
+                            # Create msg
+                            msg = txt1 + " " + txt2
                             fontFace = cv2.FONT_HERSHEY_SIMPLEX
-                            fontScale = 0.5
-                            thickness = 2
+                            fontScale = 0.35
+                            thickness = 1
                             size_txt1 = cv2.getTextSize(txt1, fontFace, fontScale, thickness)
                             size_txt2 = cv2.getTextSize(txt2, fontFace, fontScale, thickness)
+                            # size_msg = cv2.getTextSize(msg, fontFace, fontScale, thickness)
 
                             _x11 = x + 10
                             _y11 = y
@@ -213,18 +221,27 @@ class DeepOVel:
                             _y12 = _y11 + (size_txt1[0][1] + size_txt2[0][1]) + 15
                             _x21 = _x11
                             _y21 = _y12 - 5
-                            cv2.rectangle(img, (_x11, _y11), (_x12, _y12), background_color, cv2.FILLED)
+
+                            # _x11 = x + 10
+                            # _y11 = y + 10
+                            # _x12 = _x11 + size_msg[0][0]
+                            # _y12 = _y11 + size_msg[0][1]-15
+                            # cv2.rectangle(img, (_x11, _y11+3), (_x12, _y12), background_color, cv2.FILLED)
+                            # cv2.putText(img, msg, (_x11, _y11), fontFace, fontScale, text_color, thickness)
+
+                            if txt2 == "":
+                                _y12 = _y11 + size_txt1[0][1] + 15
+
+                            cv2.rectangle(img, (_x11, _y11+5), (_x12, _y12), background_color, cv2.FILLED)
                             cv2.putText(img, txt1, (_x11, (_y11+15)), fontFace, fontScale, text_color, thickness)
                             cv2.putText(img, txt2, (_x21, _y21), fontFace, fontScale, text_color, thickness)
-                            cv2.circle(img, (x, y), 4, (0, 0, 255), -1)
-                            if (self.select_id == object_id):
-                                ImageUtils.DrawBbox(
-                                    img, df_img.iloc[i]["bb_left"],
-                                    df_img.iloc[i]["bb_top"],
-                                    df_img.iloc[i]["bb_right"],
-                                    df_img.iloc[i]["bb_bottom"],
-                                    text_color)
+                            cv2.circle(img, (x, y), 2, (0, 0, 255), -1)
+                            cv2.drawMarker(img, position=(x, y), color=(0, 0, 255), markerType=cv2.MARKER_CROSS, markerSize=25, thickness=1)
 
+                            if (self.select_id == object_id):
+                                ImageUtils.DrawBbox(img, bb_l, bb_t, bb_r, bb_b, text_color)
+
+                            # ImageUtils.DrawBbox(img, bb_l, bb_t, bb_r, bb_b, background_color, msg, thickness=thickness, fontScale=fontScale)
                         video_out.write(img)
 
                         count += 1
