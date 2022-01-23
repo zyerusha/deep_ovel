@@ -117,8 +117,8 @@ Nicolai Wojke, Alex Bewley, Dietrich Paulus; 2017 </br>
 [7] Simple Online and Realtime Tracking
 Alex Bewley , Zongyuan Ge, Lionel Ott, Fabio Ramos, Ben Upcroft; 2017 </br>
  </br>
+ 
 ## Dataset used to evaluate the model:  
-
 [1] VIRAT https://viratdata.org/  </br>
 Videos: https://data.kitware.com/#collection/56f56db28d777f753209ba9f/folder/56f581ce8d777f753209ca43</br>
 Latest most up to date annotations are the DIVA Annotation. This is a public repository of the VIRAT video data annotations as annotated by the IARPA DIVA program. </br>
