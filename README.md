@@ -31,11 +31,11 @@ The project is hosted on [dockerhub](https://hub.docker.com/r/zyerusha/deep_ovel
 Pull by calling: ```docker pull zyerusha/deep_ovel``` </br>
 To run use: </br>
 ```
-docker run -dP deep_ovel
+docker run -dP zyerusha/deep_ovel
 ```
 or
 ```
-docker run -dp <selected_port>:8080 --name <container_name> deep_ovel
+docker run -dp <selected_port>:8080 --name <container_name> zyerusha/deep_ovel
 ```
 Then open a web browser to: </br>
 "localhost:<selected_port>" 
