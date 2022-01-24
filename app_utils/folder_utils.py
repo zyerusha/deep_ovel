@@ -1,6 +1,4 @@
 import os
-from pathlib import Path
-from sys import path
 import shutil
 import requests
 

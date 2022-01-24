@@ -1,30 +1,15 @@
-import ctypes
 from tf_yolov4.preprocess.save_model import save_tf
-from app_utils.bbox_utils import Evaluate
 from app_utils.video_utils import VideoUtils
 from app_utils.velocity_utils import VelocityUtils
 from app_utils.image_utils import ImageUtils
 from deepsort_yolo import DeepsortYolo
 import cv2
 import pandas as pd
-import numpy as np
-from concurrent.futures import ThreadPoolExecutor
-import multiprocessing
-# from absl import app, flags, logging
-# from absl.flags import FLAGS
 import logging
 import pathlib
-import threading
 import time
 import os
-# from app_utils.folder_utils import FolderUtils
 from shutil import copy2
-from sys import path
-from yaml import SafeLoader, load
-from PIL import ImageFont
-import matplotlib.pyplot as plt
-import sys
-import traceback
 from zipfile import ZipFile
 
 

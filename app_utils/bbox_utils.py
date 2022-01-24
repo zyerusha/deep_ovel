@@ -1,8 +1,6 @@
 import cv2
-import numpy as np
 from .video_utils import VideoUtils
 import os
-from sys import path
 
 
 class Bbox:
@@ -15,16 +13,6 @@ class Bbox:
         self.height = abs(self.bottom - self.top)
         self.center_x = int((self.left + self.right)/2)
         self.center_y = int((self.top + self.bottom)/2)
-
-    # def __init__(self, x1, y1, x2, y2, image_height = 1, image_width = 1):
-    #     self.left = int(min(x1, x2) * image_width)
-    #     self.right = int(max(x1, x2) * image_width)
-    #     self.top = int(min(y1, y2) * image_height)
-    #     self.bottom = int(max(y1, y2) * image_height)
-    #     self.width = abs(self.left - self.right)
-    #     self.height = abs(self.bottom - self.top)
-    #     self.center_x = int((self.left + self.right)/2)
-    #     self.center_y = int((self.top + self.bottom)/2)
 
     @property
     def area(self):

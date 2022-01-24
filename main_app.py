@@ -1,19 +1,14 @@
 
+from gevent.pywsgi import WSGIServer
 from datetime import datetime
-import json
-import random
 import time
 import os
-from apscheduler.schedulers.background import BackgroundScheduler
 from markupsafe import escape
-import flask
-from flask import Flask, flash, request, redirect, url_for, render_template
-from flask import send_file, send_from_directory, abort
+from flask import Flask, flash, request, redirect, render_template
+from flask import send_from_directory, abort
 import werkzeug
-# from werkzeug.utils import secure_filename
 from deep_ovel import DeepOVel
 import threading
-from waitress import serve
 
 app = Flask(__name__)
 app.uploadVideoName = ""
@@ -165,4 +160,6 @@ def upload_file():
 
 if __name__ == "__main__":
     print(f'ENV is set to: {app.config["ENV"]}')
-    serve(app, host=app.config["HOST_IP"], port=app.config["PORT"])
+    # app.run(debug=True)
+    http_server = WSGIServer((app.config["HOST_IP"], app.config["PORT"]), app)
+    http_server.serve_forever()

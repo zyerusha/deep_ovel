@@ -1,14 +1,7 @@
 import cv2
 import os
-import shutil
-import pandas as pd
 import numpy as np
-import json
-from pathlib import Path
-from time import time
-# from PIL import ImageGrab #from pip install pillow
 import pyscreenshot as ImageGrab
-# from video_utils_virat import YoloUtils
 
 
 class VideoUtils:
