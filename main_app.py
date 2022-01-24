@@ -8,7 +8,7 @@ from apscheduler.schedulers.background import BackgroundScheduler
 from markupsafe import escape
 import flask
 from flask import Flask, flash, request, redirect, url_for, render_template
-from flask import send_file, send_from_directory, safe_join, abort
+from flask import send_file, send_from_directory, abort
 import werkzeug
 # from werkzeug.utils import secure_filename
 from deep_ovel import DeepOVel
@@ -156,7 +156,7 @@ def upload_file():
             video_name = werkzeug.utils.secure_filename(file.filename)
             os.makedirs(app.config['UPLOAD_FOLDER'], exist_ok=True)
             os.makedirs(app.config['DOWNLOAD_FOLDER'], exist_ok=True)
-            full_upload_name = safe_join(app.config['UPLOAD_FOLDER'], video_name)
+            full_upload_name = werkzeug.utils.safe_join(app.config['UPLOAD_FOLDER'], video_name)
             file.save(full_upload_name)
             return redirect('/processing_file/'+video_name)
 
