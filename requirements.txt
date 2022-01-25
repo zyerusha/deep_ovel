@@ -18,13 +18,11 @@ pyscreenshot==3.0
 pytest==6.2.4
 tensorflow==2.7.0
 urllib3==1.26.7
-numpy==1.21.4
 easydict
 pandas
 scipy
 matplotlib
 pyyaml
-apscheduler
 MarkupSafe
 Flask
 gevent
