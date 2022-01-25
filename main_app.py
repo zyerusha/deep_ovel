@@ -1,5 +1,7 @@
-
+import gevent.monkey
+gevent.monkey.patch_all()
 from gevent.pywsgi import WSGIServer
+import gevent
 from datetime import datetime
 import time
 import os
@@ -8,7 +10,6 @@ from flask import Flask, flash, request, redirect, render_template
 from flask import send_from_directory, abort
 import werkzeug
 from deep_ovel import DeepOVel
-import threading
 
 app = Flask(__name__)
 app.uploadVideoName = ""
@@ -101,8 +102,6 @@ def get_status():
 def process_file(video_name):
     if request.method == 'GET':
         app.uploadVideoName = video_name
-        app.backgroundThread = threading.Thread(target=app.deepOVel.GetProgress, args=(), daemon=True)
-        app.backgroundThread.start()
         return render_template('client/processing_video_msg.html', filename=video_name)
 
     if request.method == 'POST':
@@ -157,9 +156,9 @@ def upload_file():
 
     return render_template("client/file_upload_page.html")
 
-
 if __name__ == "__main__":
     print(f'ENV is set to: {app.config["ENV"]}')
     # app.run(debug=True)
     http_server = WSGIServer((app.config["HOST_IP"], app.config["PORT"]), app)
     http_server.serve_forever()
+
