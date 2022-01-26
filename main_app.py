@@ -1,15 +1,15 @@
 import gevent.monkey
+import gevent
 gevent.monkey.patch_all()
 from gevent.pywsgi import WSGIServer
-import gevent
-from datetime import datetime
-import time
-import os
-from markupsafe import escape
-from flask import Flask, flash, request, redirect, render_template
-from flask import send_from_directory, abort
-import werkzeug
 from deep_ovel import DeepOVel
+import werkzeug
+from flask import send_from_directory, abort
+from flask import Flask, flash, request, redirect, render_template
+from markupsafe import escape
+import os
+import time
+from datetime import datetime
 
 app = Flask(__name__)
 app.uploadVideoName = ""
@@ -129,16 +129,16 @@ def upload_file():
 
         file = request.files['file']
 
-        app.CamTilt = float(request.form['CamTilt'])
-        app.CamHeight = float(request.form['CamHeight'])
-        app.VelScale = float(request.form['VelScale'])
+        app.CamTilt = float(escape(request.form['CamTilt']))
+        app.CamHeight = float(escape(request.form['CamHeight']))
+        app.VelScale = float(escape(request.form['VelScale']))
 
-        app.CamFov = float(request.form['CamFov'])
-        app.VertImageDim = float(request.form['VertImageDim'])
-        app.CamFocalLength = float(request.form['CamFocalLength'])
+        app.CamFov = float(escape(request.form['CamFov']))
+        app.VertImageDim = float(escape(request.form['VertImageDim']))
+        app.CamFocalLength = float(escape(request.form['CamFocalLength']))
 
-        app.StartTime = float(request.form['StartTime'])
-        app.VideoDuration = float(request.form['VideoDuration'])
+        app.StartTime = float(escape(request.form['StartTime']))
+        app.VideoDuration = float(escape(request.form['VideoDuration']))
 
         # If the user does not select a file, the browser submits an
         # empty file without a filename.
@@ -152,13 +152,13 @@ def upload_file():
             os.makedirs(app.config['DOWNLOAD_FOLDER'], exist_ok=True)
             full_upload_name = werkzeug.utils.safe_join(app.config['UPLOAD_FOLDER'], video_name)
             file.save(full_upload_name)
-            return redirect('/processing_file/'+video_name)
+            return redirect('/processing_file/' + video_name)
 
     return render_template("client/file_upload_page.html")
+
 
 if __name__ == "__main__":
     print(f'ENV is set to: {app.config["ENV"]}')
     # app.run(debug=True)
     http_server = WSGIServer((app.config["HOST_IP"], app.config["PORT"]), app)
     http_server.serve_forever()
-
