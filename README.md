@@ -136,9 +136,9 @@ AU-AIR : Multi-modal UAV Dataset for Low Altitude Traffic Surveillance (bozcani.
 Bozcan, Ilker, and Erdal Kayaan. "AU-AIR: A Multi-modal Unmanned Aerial Vehicle Dataset for Low Altitude Traffic Surveillance." </br>
 IEEE International Conference on Robotics and Automation (ICRA), 2020, to appear.
 
-
-## Thanks for you interest!
-Hope you find this helpful.  If you have any questions or comments, feel free to reach out to me on [LinkedIn](https://www.linkedin.com/in/zafrir-zeph-y-94568210)
+</br>
+## Thanks for your interest!
+I hope you found this repo and tool helpful.  If you have any questions or comments, feel free to reach out to me on [LinkedIn](https://www.linkedin.com/in/zafrir-zeph-y-94568210)
 
 
 
