@@ -67,7 +67,7 @@ ___
 
 
 ## Acknowledgements
-Special thanks to Zuraiz Uddin for his mentorship and guidance while working on this project.
+Special thanks to [Zuraiz Uddin](https://www.linkedin.com/in/zuraiz-uddin-99600296) for his mentorship and guidance while working on this project.
 
 ### Code:
 I would like to acknowledge the following resources used in this project. A lot of the core python code was taken from the following repositories:  </br>
