@@ -1,4 +1,4 @@
-# <span style="color: rgb(175, 75, 75)">*!!! Welcome to DeepOVel - Deep Object Velocity in Video !!!*</span>
+# <span style="color: rgb(175, 75, 75)">*Welcome to DeepOVel - Deep Object Velocity in Video!*</span>
 ## Introduction
 As a means of improving smart traffic monitoring within an urban setting, there is a need to be able to estimate velocities of moving objects (cars, humans). Doing so will help in detecting and mitigating traffic congestion. By leveraging existing camera infrastructure on the roadways, video feed can estimate the velocity of the object thus alerting other systems and helping alleviate the traffic bottlenecks.  <br>
 My  objective in this project was to be able to estimate the velocity of moving objects within a video using Deep Learning algorithms. </br>  
