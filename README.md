@@ -1,13 +1,38 @@
-## <span style="color: rgb(175, 75, 75)">*!!! Welcome to DeepOVel - Deep Object Velocity in Video !!!*</span>
+# <span style="color: rgb(175, 75, 75)">*Welcome to DeepOVel - Deep Object Velocity in Video!*</span>
+## Introduction
+As a means of improving smart traffic monitoring within an urban setting, there is a need to be able to estimate velocities of moving objects (cars, humans). Doing so will help in detecting and mitigating traffic congestion. By leveraging existing camera infrastructure on the roadways, video feed can estimate the velocity of the object thus alerting other systems and helping alleviate the traffic bottlenecks.  <br>
+My  objective in this project was to be able to estimate the velocity of moving objects within a video using Deep Learning algorithms. </br>  
+This tool was developed as part of my capstone project for the UC San Diego Extension Machine Learning Engineering Bootcamp.</br></br>
+### Object detection and classification
+The tool leverages the [YOLO - You Only Look Once](https://arxiv.org/abs/1506.02640) algorithm (Redmon et al., 2015) for image detection and classification. YOLO is considered to be extremely fast versus other image detection and classification methods, such as [Histogram of Oriented Gradients (HOG)](https://ieeexplore.ieee.org/abstract/document/1467360) (N. Dalal; B. Triggs, 2005); [Single Shot Detector (SSD)](https://arxiv.org/abs/1512.02325); or Region-based Convolutional Neural Networks (R-CNN) and it’s variants: Fast R-CNN, and [Faster R-CNNs](https://arxiv.org/abs/1506.01497) (Ren et al., 2015), [Mask R-CNN](https://www.analyticsvidhya.com/blog/2019/07/computer-vision-implementing-mask-r-cnn-image-segmentation/) for Image Segmentation; </br> 
 
-This tool was developed as part of my capstone project for the UC San Diego Extension Machine Learning Engineering Bootcamp.
-My  objective in this project was to be able to estimate the velocity of moving objects within a video using Deep Learning algorithms.  
+Speed comparison between different detection methods ([source](https://cv-tricks.com/object-detection/faster-r-cnn-yolo-ssd/)): </br>
+![image](https://user-images.githubusercontent.com/11064132/155455879-7434d454-0c56-4b3f-8d30-5d96375548ce.png) </br>
+
+
+In general, YOLO works on the concept of dividing each image into a grid of S x S and each grid predicts N bounding boxes and confidence. </br> 
+The confidence reflects the accuracy of the bounding box and whether the bounding box actually contains an object. YOLO also predicts the classification score of each class it was trained on. The probability of an object of a specific class being in a bounding box can then be calculated.  </br>
+A total SxSxN boxes are predicted and since most of these boxes have low confidence scores, a threshold is applied on the confidence and boxes with low confidence are removed. 
+As a note, one drawback of YOLO is that it only predicts 1 type of class in one grid therefore it struggles  detecting small objects. </br></br>
+
+YOLO object detection pipeline ([source](https://arxiv.org/abs/1506.02640)): </br>
+![image](https://user-images.githubusercontent.com/11064132/155456205-5cbb1cde-67e5-47bb-9ec2-012a55230ee0.png) </br>
 </br>
-The output of this code produces a Flask web server that enables a user to upload a video via the web browser.  The video is processed and returned in the form of a .zip file containing: 
-- [x] A copy of the original uploaded video 
-- [x] A video with bounding boxes as an output from the Yolo & DeepSort algorithms
-- [x] A video with the estimated velocities of the detected objects
-- [x] A .csv file containing all of the outputs of the tool
+
+The YOLO algorithm does not apply [non-maxima suppression](https://pyimagesearch.com/2014/11/17/non-maximum-suppression-object-detection-python/?_ga=2.266530702.1041006104.1640999966-2035547223.1637780419), therefore it needs to be explicitly applied to suppress significantly overlapping bounding boxes, keeping only the most confident ones.  </br></br>
+
+### Object Tracking
+In order to continuously track objects along multiple frames, each object must be uniquely identified between consecutive frames. To accomplish this, the [DeepSORT](https://arxiv.org/abs/1703.07402) algorithm was chosen since it is suited for real time applications. DeepSORT is based on the [Simple Online and Realtime Tracking (SORT)](https://arxiv.org/abs/1602.00763) algorithm.  Much of the computational complexity is done during the offline pre-training stage where a deep association metric on a large-scale re-identification dataset is learned. When the application is running online, it leverages nearest neighbor queries in visual appearance space and the algorithm performs measurement-to-track associations. With DeepSORT, objects can be tracked through longer periods of occlusions effectively reducing the number of identity switches. </br></br>
+
+### Velocity Estimation
+The geometric calculation for velocity estimation is performed by using properties of the camera/image and  computation made for the distance of an object based on the camera field of view and height (see [Speed Estimation On Moving Vehicle Based On Digital Image Processing](https://www.researchgate.net/publication/317312246_Speed_Estimation_On_Moving_Vehicle_Based_On_Digital_Image_Processing)).</br></br>
+
+### Project Output</br>
+The output of this code produces a Flask web server that enables a user to upload a video via the web browser.  The video is processed and returned in the form of a .zip file containing: </br>
+- A copy of the original uploaded video  </br>
+- video with bounding boxes as an output from the Yolo & DeepSort algorithms </br>
+- video with the estimated velocities of the detected objects </br>
+- .csv file containing all of the outputs of the tool </br>
 
 
 ![image](https://user-images.githubusercontent.com/11064132/150652498-d252d0bf-fc43-404e-99c3-e2c97b2b347a.png)
@@ -67,7 +92,7 @@ ___
 
 
 ## Acknowledgements
-Special thanks to Zuraiz Uddin for his mentorship and guidance while working on this project.
+Special thanks to [Zuraiz Uddin](https://www.linkedin.com/in/zuraiz-uddin-99600296) for his mentorship and guidance while working on this project.
 
 ### Code:
 I would like to acknowledge the following resources used in this project. A lot of the core python code was taken from the following repositories:  </br>
@@ -136,8 +161,10 @@ AU-AIR : Multi-modal UAV Dataset for Low Altitude Traffic Surveillance (bozcani.
 Bozcan, Ilker, and Erdal Kayaan. "AU-AIR: A Multi-modal Unmanned Aerial Vehicle Dataset for Low Altitude Traffic Surveillance." </br>
 IEEE International Conference on Robotics and Automation (ICRA), 2020, to appear.
 
+</br>
 
-
+## Thanks for your interest!</br>
+I hope you found this repo and tool helpful.  If you have any questions or comments, feel free to reach out on [LinkedIn](https://www.linkedin.com/in/zafrir-zeph-y-94568210)
 
 
 
