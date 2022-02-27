@@ -32,21 +32,27 @@ class DeepsortYolo:
         return None
 
     def GetProgress(self):
+        '''gets the percent complete progress of the deepsort/yolo calculations on the video'''
         return self.myProgress
 
     def SetProgress(self, progress):
+        '''allows setting the value of the percent complete progress'''
         self.myProgress = progress
 
-    def ProcessVideo(self, yolo_weight_file, model_filename, orig_video, output_dir, output_video, starttime, duration,  save_images=False):
+    def ProcessVideo(self, yolo_weight_file, model_filename, orig_video, output_dir, output_video, starttime, duration, save_images=False):
+        '''This is the main function that gets called to perform the yolo and deepsort calculations on the video'''
+
         if (not orig_video):
             raise Exception(f"File not found: {orig_video}")
 
         self.myProgress = 0
+        # load the saved model
         saved_model_loaded = tf.saved_model.load(
             yolo_weight_file, tags=[tag_constants.SERVING])
         yolo_model = saved_model_loaded.signatures['serving_default']
 
         yolo_all = True
+        # initialize the YoloV4
         all_classes, find_classes = self.DoYoloV4Init(yolo_all)
         self.DoDeepsortInit(model_filename)
         # print(orig_video)
@@ -71,7 +77,6 @@ class DeepsortYolo:
             while (True):
                 success, frame = video_in.read()
                 if(success):
-
                     bboxes, scores, names = self.DoYoloV4(frame, yolo_model, all_classes, find_classes)
                     result, df_frame_data = self.DoDeepsort(frame, bboxes, scores, names)
                     cv2.putText(frame, "Objects tracked: {}".format(len(names)), (5, 35), cv2.FONT_HERSHEY_COMPLEX_SMALL, 2, (0, 255, 0), 2)
@@ -86,7 +91,7 @@ class DeepsortYolo:
                         cv2.imwrite(output_dir + str(frame_count) + ".jpg", result)
 
                     frame_count += 1
-                    percent_complete = ((frame_count-start_count)/(end_count-start_count))*100
+                    percent_complete = ((frame_count - start_count) / (end_count - start_count)) * 100
 
                     if((frame_count % 25) == 0):
                         print(f"Created frame id {frame_count}, {frame_count/fps:0.2f} sec in video; Objects Cnt: {len(names)} completed:  {percent_complete:0.1f} %")
@@ -101,32 +106,22 @@ class DeepsortYolo:
             video_in.release()  # done with original video
             video_out.release()
 
-            # print("Done: Created video: " + output_video)
-
         cv2.destroyAllWindows()
 
         return output_video, bbox_data
 
     def DoYoloV4Init(self, yolo_all):
+        '''Initialization of the Yolo from config file'''
         all_classes = utils.read_class_names(cfg.YOLO.CLASSES)
         if(yolo_all):
             find_classes = list(all_classes.values())
         else:
             find_classes = ['car']
 
-        # model = None
-        # if(tf.saved_model.contains_saved_model(yolo_weight_file)):
-        #     saved_model_loaded = tf.saved_model.load(yolo_weight_file, tags=[tag_constants.SERVING])
-        #     model =  saved_model_loaded.signatures['serving_default']
-        #     #.DEFAULT_SERVING_SIGNATURE_DEF_KEY
-        # return model
         return all_classes, find_classes
 
     def DoYoloV4(self, frame, yolo_model, all_classes, find_classes):
-        # height, width, layers = frame.shape
-        # image_size = (width, height)
-
-        # frame, bbox = self.DoYolo(frame, 0.5, 0.3)
+        '''Runs the yolo algorithm on a frame'''
         input_size = 416
         image_data = cv2.resize(frame, (input_size, input_size))
         image_data = image_data / 255.
@@ -168,6 +163,7 @@ class DeepsortYolo:
         return boxes, scores, names
 
     def DoDeepsortInit(self, model_filename):
+        '''Initializes the deepsort'''
         # Definition of the parameters
         max_cosine_distance = 0.4
         nn_budget = None
@@ -183,6 +179,7 @@ class DeepsortYolo:
         self.deepsortTracker = Tracker(metric)
 
     def DoDeepsort(self, frame, bboxes, scores, names):
+        '''Runs the deepsort algorithm on the frame'''
         # encode yolo detections and feed to tracker
         features = self.deepsortEncoder(frame, bboxes)
         detections = [Detection(bbox, score, class_name, feature) for bbox,

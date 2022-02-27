@@ -14,6 +14,7 @@ from zipfile import ZipFile
 
 
 class DeepOVel:
+    '''This class manages the application and the "glue" between the Yolo-DeepSORT bounding boxes calculations and the velocity calculation.'''
     vUtils = VideoUtils()
     deepsortYolo = DeepsortYolo()
     velUtils = VelocityUtils()
@@ -39,9 +40,11 @@ class DeepOVel:
         return None
 
     def GetProgress(self):
+        '''Provides the percent completion of both the deepsort-yolo and this class run()'''
         return self.deepsortYolo.GetProgress(), self.myProgress
 
     def SetCameraParams(self, cam_tilt, cam_height, cam_fov=41.1, cam_focal=-1, vert_image_dim=-1):
+        '''Enables setting the camera parameters used for velocity calcutions'''
         self.cam_tilt = float(cam_tilt)  # 'Camera tilt angle in deg from horizon')
         self.cam_height = float(cam_height)  # 'Camera hight above object [m]')
         self.cam_fov = float(cam_fov)  # 'Camera field of view deg')
@@ -49,23 +52,28 @@ class DeepOVel:
         self.vert_image_dim = float(vert_image_dim)  # 'Camera focal length [m]')
 
     def SetVelCalibarion(self, scaling_units):
+        '''allows setting a specific scale for velocity units. All calculations are done in m/s, the final velocity is presented in the video in the users desired units per this scale (m/s * scale = specific units)'''
         self.vel_unit_scale = float(scaling_units)
 
     def GetVideoDuration(self, src_video, start_time, duration):
+        '''This function finds the total duration of the video from the video's properties'''
         video_in = cv2.VideoCapture(src_video)
         if video_in.isOpened():
             fps, total_frames, frame_size = VideoUtils.GetVideoData(video_in)
             start_count, end_count = VideoUtils.GetStartEndCount(fps, total_frames, start_time, duration)
-            video_duration = int((end_count-start_count) / fps)
+            video_duration = int((end_count - start_count) / fps)
             video_in.release()
         return video_duration
 
     def SaveWeightsYoloV4(self, output_dir, weights):
+        '''saves yolo weights as a tensorflow data struct in a to a specific directory'''
         if not os.path.exists(output_dir):
             print("running save_tf")
             save_tf(output_dir, weights)
 
     def ProcessVideo(self, src_video, video_dest_path, model_dir, starttime, duration):
+        '''This function is called by Run() to process the video. It identifies the objects in the video, create bounding boxes and gives an ids to the objects. '''
+        '''The processing is on the section in video that is requested by  the starttime and until the duration. The output is a video with all the bounding boxes and ids on the objects and a .csv file containing the raw calculated data per frame'''
         processed_postfix = 'yolo_'
         logging.info(f"Processing video {src_video}")
         video_duration = self.GetVideoDuration(src_video, starttime, duration)
@@ -93,6 +101,7 @@ class DeepOVel:
         return output_video_file, tracker_file_csv
 
     def GetFps(self, src_video):
+        '''Gets the frames per second of the video, the total number of frames and the frame side'''
         success = False
         video_in = cv2.VideoCapture(src_video)
         fps = 0
@@ -106,6 +115,7 @@ class DeepOVel:
         return success, fps, total_frames, frame_size
 
     def AddVelocitiesToVideo(self, src_video, video_dest_path, bb_file, starttime, duration):
+        '''This function adds the velocities to a video file'''
         if (not src_video):
             raise Exception(f"File not found: {src_video}")
 
@@ -158,7 +168,7 @@ class DeepOVel:
                     success, img = video_in.read()
 
                     if(success):
-                        percent_complete = ((count-start_count)/(end_count-start_count))*100
+                        percent_complete = ((count - start_count) / (end_count - start_count)) * 100
 
                         if((count % 25) == 0):
                             print(f"Created frame id {count:2d}, {count/fps:0.2f} sec in video; completed:  {percent_complete:0.1f} %")
@@ -217,16 +227,14 @@ class DeepOVel:
                             if txt2 == "":
                                 _y12 = _y11 + size_txt1[0][1] + 15
 
-                            cv2.rectangle(img, (_x11, _y11+5), (_x12, _y12), background_color, cv2.FILLED)
-                            cv2.putText(img, txt1, (_x11, (_y11+15)), fontFace, fontScale, text_color, thickness)
+                            cv2.rectangle(img, (_x11, _y11 + 5), (_x12, _y12), background_color, cv2.FILLED)
+                            cv2.putText(img, txt1, (_x11, (_y11 + 15)), fontFace, fontScale, text_color, thickness)
                             cv2.putText(img, txt2, (_x21, _y21), fontFace, fontScale, text_color, thickness)
                             cv2.circle(img, (x, y), 2, (0, 0, 255), -1)
                             cv2.drawMarker(img, position=(x, y), color=(0, 0, 255), markerType=cv2.MARKER_CROSS, markerSize=25, thickness=1)
 
                             if (self.select_id == object_id):
                                 ImageUtils.DrawBbox(img, bb_l, bb_t, bb_r, bb_b, text_color)
-
-                            # ImageUtils.DrawBbox(img, bb_l, bb_t, bb_r, bb_b, background_color, msg, thickness=thickness, fontScale=fontScale)
                         video_out.write(img)
 
                         count += 1
@@ -245,9 +253,8 @@ class DeepOVel:
         cv2.destroyAllWindows()
         return output_video_file, df
 
-    # def main(_argv):
-
     def Run(self, src_video, dest_path, video_duration=-1, video_start=0):
+        '''Main function to be called. will preform all the calculations to generate a video with the velocities'''
         self.IsRunning = True
         time_now = time.time()
         self.myProgress = 0
@@ -273,24 +280,8 @@ class DeepOVel:
         df_sub = pd.DataFrame(df[(df['object_id'] == self.select_id)])
         print(df_sub.tail(50))
 
-        # for id in df['object_id'].unique():
-        #     mask = (df['object_id'] == id)
-        #     sub_df = df[mask]
-        #     # plt.plot(sub_df["Frame"], sub_df["vel"])
-
-        #     if (sub_df[(sub_df['category'] == "person")]):
-        #         plt.plot(sub_df["Frame"], sub_df["filt_vel"])
-
-        # plt.show()
-
         duration = time.time() - time_now
         print(f"Completed {duration} seconds")
-        # cnt = 0
-        # sleep_sec = 2
-        # while True:
-        #     time.sleep(sleep_sec)
-        #     print(cnt)
-        #     cnt += sleep_sec
 
         self.IsRunning = False
 
@@ -300,6 +291,7 @@ class DeepOVel:
 
 
 def zip_it_up(zip_filename, top_dir):
+    '''This is a helper function to zip  files together''' 
     # create a ZipFile object
     with ZipFile(zip_filename, 'w') as zipObj:
         # Iterate over all the files in directory
