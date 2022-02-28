@@ -164,7 +164,7 @@ IEEE International Conference on Robotics and Automation (ICRA), 2020, to appear
 </br>
 
 ## Thanks for your interest!</br>
-I hope you found this repo and tool helpful.  If you have any questions or comments, feel free to reach out on [LinkedIn](https://www.linkedin.com/in/zafrir-zeph-y-94568210)
+I hope you found this repo and tool helpful.  If you have any questions or comments, feel free to reach out on [LinkedIn](https://www.linkedin.com/in/zyerusha)
 
 
 
