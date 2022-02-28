@@ -15,9 +15,9 @@ jobs:
     steps:
     - uses: actions/checkout@v2
     - name: Build the Docker image
-      run: docker build . --file Dockerfile --tag deep_ovel
+      run: docker build . --file Dockerfile --tag deep_ovel:latest
       
     - uses: actions/upload-artifact@v2
       with:
         name: save artifact
-        path: deep_ovel
+        path: deep_ovel:latest
